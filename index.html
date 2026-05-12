@@ -22,7 +22,7 @@
         canvas {
             display: block;
             width: 100% !important;
-            height: 250px !important;
+            height: 220px !important;
             touch-action: none;
             cursor: crosshair;
         }
@@ -32,6 +32,24 @@
             padding: 2.5rem; 
             border-radius: 0.5rem; 
             position: relative;
+            overflow: hidden;
+        }
+        /* Watermark Background using Logo */
+        .paper::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background-image: url('https://i.ibb.co.com/FZjDyqZ/1769855671442.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
         }
         .meterai-overlay {
             position: absolute;
@@ -44,6 +62,7 @@
             pointer-events: none;
         }
         .sig-image-wrapper { position: relative; z-index: 2; }
+        .content-relative { position: relative; z-index: 1; }
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -129,62 +148,71 @@
             <!-- Preview Area -->
             <div id="previewArea" class="hidden space-y-6">
                 <div class="paper" id="contractContent">
-                    <div class="text-center mb-8 border-b-2 border-slate-900 pb-4">
-                        <h2 class="text-xl font-bold">SURAT PERJANJIAN PINJAMAN UANG</h2>
-                        <p class="text-[10px] font-bold mt-1 uppercase">PT. ABADI LESTARI MANDIRI</p>
-                        <p class="text-[9px] text-slate-600">AHU-072276.AH.01.30.Tahun 2025</p>
-                    </div>
-
-                    <div class="text-[13px] leading-relaxed mb-6 space-y-3 text-justify">
-                        <p>Bahwa pada hari ini, <span id="contractDate" class="font-bold"></span>, telah dibuat kesepakatan antara:</p>
-                        <ul class="list-none space-y-1 ml-4">
-                            <li>1. <strong><span id="p_lender"></span></strong> (Pihak Pertama / Pemberi)</li>
-                            <li>2. <strong><span id="p_borrower"></span></strong> dengan NIK: <strong><span id="p_nik"></span></strong> (Pihak Kedua / Penerima)</li>
-                        </ul>
-                        <p>Pihak Pertama telah menyerahkan dana sebesar <span id="p_amount" class="font-bold"></span> kepada Pihak Kedua. Pihak Kedua wajib melakukan pelunasan dengan rincian sebagai berikut:</p>
-                    </div>
-
-                    <table class="w-full text-xs mb-8 border-collapse">
-                        <tr class="bg-slate-50">
-                            <td class="p-3 border font-semibold">Pokok Pinjaman</td>
-                            <td id="res_amount" class="p-3 border text-right font-bold"></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 border font-semibold">Bunga (Nominal)</td>
-                            <td id="res_interest" class="p-3 border text-right font-bold text-red-600"></td>
-                        </tr>
-                        <tr class="bg-slate-50">
-                            <td class="p-3 border font-semibold">Total Wajib Bayar</td>
-                            <td id="res_total" class="p-3 border text-right font-bold text-indigo-700"></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 border font-semibold">Metode Pembayaran</td>
-                            <td id="res_scheme" class="p-3 border text-right"></td>
-                        </tr>
-                    </table>
-
-                    <div class="grid grid-cols-2 gap-8 mt-16 text-center">
-                        <div>
-                            <p class="text-[11px] font-bold mb-10">Pihak Pertama,</p>
-                            <img id="img_lender" class="mx-auto h-20 object-contain mb-2 border-b" src="" alt="">
-                            <p id="sign_name_lender" class="text-[11px] font-bold"></p>
+                    <div class="content-relative">
+                        <div class="text-center mb-8 border-b-2 border-slate-900 pb-4">
+                            <h2 class="text-xl font-bold">SURAT PERJANJIAN PINJAMAN UANG</h2>
+                            <p class="text-[10px] font-bold mt-1 uppercase">PT. ABADI LESTARI MANDIRI</p>
+                            <p class="text-[9px] text-slate-600">AHU-072276.AH.01.30.Tahun 2025</p>
                         </div>
-                        <div class="relative">
-                            <p class="text-[11px] font-bold mb-10">Pihak Kedua,</p>
-                            <!-- Meterai Overlay -->
-                            <img src="https://i.ibb.co.com/V07QXXG5/Meterai-Tempel-10000.jpg" class="meterai-overlay">
-                            <div class="sig-image-wrapper">
-                                <img id="img_borrower" class="mx-auto h-20 object-contain mb-2" src="" alt="">
+
+                        <div class="text-[12px] leading-relaxed mb-6 space-y-3 text-justify">
+                            <p>Pada hari ini, <span id="contractDate" class="font-bold"></span>, yang bertanda tangan di bawah ini:</p>
+                            <div class="ml-4">
+                                <p><strong>PIHAK PERTAMA:</strong> <span id="p_lender"></span></p>
+                                <p><strong>PIHAK KEDUA:</strong> <span id="p_borrower"></span> (NIK: <span id="p_nik"></span>)</p>
                             </div>
-                            <p id="sign_name_borrower" class="text-[11px] font-bold underline"></p>
-                            <p class="text-[9px] text-slate-500" id="sign_nik_borrower"></p>
+                            
+                            <p class="font-bold border-b border-slate-100 pb-1">PASAL 1 - KESEPAKATAN PINJAMAN</p>
+                            <p>Pihak Pertama setuju memberikan pinjaman dana sebesar <span id="p_amount" class="font-bold"></span> kepada Pihak Kedua yang telah diterima secara tunai/transfer pada saat perjanjian ini ditandatangani.</p>
+                            
+                            <p class="font-bold border-b border-slate-100 pb-1">PASAL 2 - JANGKA WAKTU DAN PENGEMBALIAN</p>
+                            <p>Pihak Kedua bersedia melakukan pengembalian dana pinjaman dalam jangka waktu yang telah disepakati, sehingga total kewajiban pengembalian adalah <span id="p_total_val" class="font-bold"></span>.</p>
+
+                            <p class="font-bold border-b border-slate-100 pb-1">PASAL 3 - SANKSI DAN HUKUM</p>
+                            <p>Apabila Pihak Kedua lalai dalam memenuhi kewajiban pembayaran, maka Pihak Pertama berhak melakukan tindakan hukum sesuai peraturan perundang-undangan yang berlaku di Indonesia.</p>
+                        </div>
+
+                        <table class="w-full text-xs mb-8 border-collapse">
+                            <tr class="bg-slate-50">
+                                <td class="p-3 border font-semibold">Pokok Pinjaman</td>
+                                <td id="res_amount" class="p-3 border text-right font-bold"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-semibold">Total Bunga</td>
+                                <td id="res_interest" class="p-3 border text-right font-bold text-red-600"></td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="p-3 border font-semibold">Total Wajib Bayar</td>
+                                <td id="res_total" class="p-3 border text-right font-bold text-indigo-700"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-semibold">Metode Pembayaran</td>
+                                <td id="res_scheme" class="p-3 border text-right"></td>
+                            </tr>
+                        </table>
+
+                        <div class="grid grid-cols-2 gap-8 mt-12 text-center">
+                            <div>
+                                <p class="text-[11px] font-bold mb-10">Pihak Pertama,</p>
+                                <img id="img_lender" class="mx-auto h-20 object-contain mb-2 border-b" src="" alt="">
+                                <p id="sign_name_lender" class="text-[11px] font-bold"></p>
+                            </div>
+                            <div class="relative">
+                                <p class="text-[11px] font-bold mb-10">Pihak Kedua,</p>
+                                <img src="https://i.ibb.co.com/V07QXXG5/Meterai-Tempel-10000.jpg" class="meterai-overlay">
+                                <div class="sig-image-wrapper">
+                                    <img id="img_borrower" class="mx-auto h-20 object-contain mb-2" src="" alt="">
+                                </div>
+                                <p id="sign_name_borrower" class="text-[11px] font-bold underline"></p>
+                                <p class="text-[9px] text-slate-500" id="sign_nik_borrower"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <button onclick="downloadPDF()" class="w-full bg-emerald-600 text-white font-bold py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 hover:bg-emerald-700">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    Unduh PDF Resmi (PT. ABADI LESTARI MANDIRI)
+                    Unduh PDF Resmi dengan Watermark Logo
                 </button>
             </div>
         </div>
@@ -207,9 +235,7 @@
             canvas.height = r.height * dpr;
             ctx.scale(dpr, dpr);
             
-            ctx.lineWidth = 3; 
-            ctx.lineCap = 'round'; 
-            ctx.strokeStyle = '#000080';
+            ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#000080';
             
             let painting = false;
             const pos = (e) => {
@@ -223,30 +249,20 @@
             const draw = (e) => { if(!painting) return; if(e.cancelable) e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
             const stop = () => painting = false;
             
-            canvas.addEventListener('mousedown', start);
-            canvas.addEventListener('mousemove', draw);
-            window.addEventListener('mouseup', stop);
-            canvas.addEventListener('touchstart', start, {passive: false});
-            canvas.addEventListener('touchmove', draw, {passive: false});
-            canvas.addEventListener('touchend', stop);
-            
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); window.addEventListener('mouseup', stop);
+            canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stop);
             pads[id] = { canvas, ctx };
         }
 
-        function clearPad(role) { 
-            const p = pads[`canvas-${role}`]; 
-            p.ctx.clearRect(0, 0, p.canvas.width, p.canvas.height); 
-        }
-
+        function clearPad(role) { const p = pads[`canvas-${role}`]; p.ctx.clearRect(0, 0, p.canvas.width, p.canvas.height); }
         function toggleTenure() { 
             const wrapper = document.getElementById('tenureWrapper');
-            wrapper.style.opacity = document.getElementById('loanType').value === 'tempoan' ? '0.3' : '1';
-            wrapper.style.pointerEvents = document.getElementById('loanType').value === 'tempoan' ? 'none' : 'auto';
+            const isTempoan = document.getElementById('loanType').value === 'tempoan';
+            wrapper.style.opacity = isTempoan ? '0.3' : '1';
+            wrapper.style.pointerEvents = isTempoan ? 'none' : 'auto';
         }
 
-        function toIDR(v) { 
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v); 
-        }
+        function toIDR(v) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v); }
 
         let globalData = {};
 
@@ -259,35 +275,31 @@
             const type = document.getElementById('loanType').value;
             const ten = type === 'angsuran' ? parseInt(document.getElementById('tenure').value) : 1;
 
-            if(!l || !b || !bNIK || amt <= 0) {
-                alert("Mohon lengkapi semua data terlebih dahulu!");
-                return;
-            }
+            if(!l || !b || !bNIK || amt <= 0) { alert("Sila lengkapkan semua maklumat!"); return; }
 
             const interest = (amt * (rate/100)) * ten;
             const total = amt + interest;
-            
-            globalData = { l, b, bNIK, amt, interest, total, type, ten };
+            globalData = { l, b, bNIK, amt, interest, total, type, ten, rate };
 
-            // Fill Preview UI
             document.getElementById('p_lender').innerText = l;
             document.getElementById('p_borrower').innerText = b;
             document.getElementById('p_nik').innerText = bNIK;
             document.getElementById('p_amount').innerText = toIDR(amt);
+            document.getElementById('p_total_val').innerText = toIDR(total);
+            
             document.getElementById('res_amount').innerText = toIDR(amt);
             document.getElementById('res_interest').innerText = toIDR(interest);
             document.getElementById('res_total').innerText = toIDR(total);
-            document.getElementById('res_scheme').innerText = type === 'angsuran' ? `${toIDR(total/ten)} x ${ten} Bulan` : `${toIDR(total)} (Lunas Sekali Bayar)`;
+            document.getElementById('res_scheme').innerText = type === 'angsuran' ? `${toIDR(total/ten)} x ${ten} Bulan` : `${toIDR(total)} (Satu Kali Bayar)`;
+            
             document.getElementById('sign_name_lender').innerText = l;
             document.getElementById('sign_name_borrower').innerText = b;
             document.getElementById('sign_nik_borrower').innerText = `NIK: ${bNIK}`;
             document.getElementById('contractDate').innerText = new Date().toLocaleDateString('id-ID', { dateStyle: 'full' });
             
-            // Transfer Canvas to Images
             document.getElementById('img_lender').src = pads['canvas-lender'].canvas.toDataURL();
             document.getElementById('img_borrower').src = pads['canvas-borrower'].canvas.toDataURL();
             
-            // Show Preview
             document.getElementById('previewArea').classList.remove('hidden');
             document.getElementById('previewArea').scrollIntoView({ behavior: 'smooth' });
         }
@@ -296,8 +308,23 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const d = globalData;
+            const date = new Date().toLocaleDateString('id-ID', { dateStyle: 'full' });
+
+            // 1. Add Image Watermark (Center Background)
+            // Using a low opacity by drawing it with a high transparency setting
+            // Note: jsPDF doesn't have a direct 'opacity' for images easily without GState, 
+            // but we can place it behind everything.
+            try {
+                doc.setGState(new doc.GState({opacity: 0.05}));
+                doc.addImage(LOGO, 'PNG', 45, 80, 120, 100);
+                doc.setGState(new doc.GState({opacity: 1.0}));
+            } catch(e) {
+                // Fallback if GState fails in this version
+                doc.addImage(LOGO, 'PNG', 45, 80, 120, 100); 
+            }
             
-            // Kop Surat
+            // 2. Kop Surat
+            doc.setTextColor(0, 0, 0);
             doc.addImage(LOGO, 'PNG', 85, 10, 40, 32);
             doc.setFontSize(11); doc.setFont(undefined, 'bold');
             doc.text(COMPANY_NAME, 105, 48, { align: 'center' });
@@ -305,35 +332,58 @@
             doc.text(`BADAN HUKUM NOMOR : ${BADAN_HUKUM}`, 105, 53, { align: 'center' });
             doc.setLineWidth(0.5); doc.line(20, 58, 190, 58);
             
+            // 3. Judul
             doc.setFontSize(14); doc.setFont(undefined, 'bold');
             doc.text("SURAT PERJANJIAN PINJAMAN UANG", 105, 70, { align: 'center' });
             
+            // 4. Isi Pasal
+            doc.setFontSize(10); doc.setFont(undefined, 'normal');
+            let contentY = 80;
+            doc.text(`Pada hari ini, ${date}, telah dibuat kesepakatan antara:`, 20, contentY);
+            doc.setFont(undefined, 'bold');
+            doc.text(`PIHAK I (PEMBERI): ${d.l}`, 25, contentY + 7);
+            doc.text(`PIHAK II (PENERIMA): ${d.b} (NIK: ${d.bNIK})`, 25, contentY + 12);
+            
+            doc.setFont(undefined, 'bold');
+            doc.text("PASAL 1 - KESEPAKATAN PINJAMAN", 20, contentY + 22);
+            doc.setFont(undefined, 'normal');
+            const p1 = `Pihak Pertama setuju memberikan pinjaman dana sebesar ${toIDR(d.amt)} kepada Pihak Kedua yang telah diterima secara sah pada saat penandatanganan kontrak ini.`;
+            doc.text(doc.splitTextToSize(p1, 170), 20, contentY + 27);
+
+            doc.setFont(undefined, 'bold');
+            doc.text("PASAL 2 - JANGKA WAKTU DAN PENGEMBALIAN", 20, contentY + 42);
+            doc.setFont(undefined, 'normal');
+            const p2 = `Pihak Kedua bersedia melakukan pengembalian dana pinjaman dalam jangka waktu ${d.ten} bulan yang telah disepakati, sehingga total kewajiban pengembalian adalah ${toIDR(d.total)}.`;
+            doc.text(doc.splitTextToSize(p2, 170), 20, contentY + 47);
+
+            doc.setFont(undefined, 'bold');
+            doc.text("PASAL 3 - SANKSI DAN HUKUM", 20, contentY + 62);
+            doc.setFont(undefined, 'normal');
+            const p3 = "Apabila Pihak Kedua lalai dalam memenuhi kewajiban pembayaran, maka Pihak Pertama berhak melakukan tindakan hukum sesuai peraturan perundang-undangan yang berlaku di wilayah NKRI.";
+            doc.text(doc.splitTextToSize(p3, 170), 20, contentY + 67);
+
+            // 5. Tabel Rincian
             doc.autoTable({
-                startY: 80,
-                head: [['Identitas & Parameter', 'Keterangan']],
+                startY: contentY + 80,
+                head: [['Parameter Pinjaman', 'Keterangan Nilai']],
                 body: [
-                    ['Pemberi Pinjaman', d.l], 
-                    ['Penerima (Nasabah)', d.b], 
-                    ['NIK Penerima', d.bNIK],
                     ['Pokok Pinjaman', toIDR(d.amt)], 
-                    ['Bunga Flat', toIDR(d.interest)], 
-                    ['Total Wajib Bayar', toIDR(d.total)], 
-                    ['Sistem Pembayaran', d.type.toUpperCase()]
+                    ['Bunga Total', toIDR(d.interest)], 
+                    ['Total Pengembalian', toIDR(d.total)], 
+                    ['Metode Bayar', d.type.toUpperCase()]
                 ],
                 theme: 'grid', 
                 headStyles: { fillColor: [30, 41, 59] },
-                styles: { fontSize: 9 }
+                styles: { fontSize: 9, fillColor: [255, 255, 255, 0.5] } // Semi-transparent to show watermark
             });
 
-            const y = doc.lastAutoTable.finalY + 40;
+            // 6. Tanda Tangan
+            const y = doc.lastAutoTable.finalY + 30;
             doc.setFontSize(10);
-            
-            // TTD Pihak I
             doc.text("Pihak Pertama,", 40, y);
             doc.addImage(pads['canvas-lender'].canvas.toDataURL(), 'PNG', 30, y + 5, 45, 20);
             doc.text(`( ${d.l} )`, 40, y + 35);
 
-            // TTD Pihak II + Meterai
             doc.text("Pihak Kedua,", 140, y);
             doc.addImage(METERAI, 'JPG', 135, y + 2, 35, 25);
             doc.addImage(pads['canvas-borrower'].canvas.toDataURL(), 'PNG', 130, y + 5, 45, 20);
@@ -341,16 +391,10 @@
             doc.setFontSize(8);
             doc.text(`NIK: ${d.bNIK}`, 140, y + 39);
 
-            doc.save(`Kontrak_${d.b}_${d.bNIK}.pdf`);
+            doc.save(`Perjanjian_Resmi_${d.b}.pdf`);
         }
 
-        window.onload = () => { 
-            // Inisialisasi setelah DOM benar-benar siap
-            setTimeout(() => { 
-                setupPad('canvas-lender'); 
-                setupPad('canvas-borrower'); 
-            }, 500); 
-        };
+        window.onload = () => { setTimeout(() => { setupPad('canvas-lender'); setupPad('canvas-borrower'); }, 500); };
     </script>
 </body>
 </html>
